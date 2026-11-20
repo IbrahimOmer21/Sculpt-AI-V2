@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block head %}
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+{% endblock %}
+{% block body %}
+<div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="Your sculptures">
+        <div class="sidebar-head">
+            <a class="brand" href="#/"><svg class="icon"><use href="#i-logo"/></svg> Sculpt AI</a>
+            <button class="icon-btn only-mobile" id="close-menu" aria-label="Close menu"><svg class="icon"><use href="#i-x"/></svg></button>
+        </div>
+        <a class="btn btn-primary btn-block" href="#/" id="new-btn"><svg class="icon"><use href="#i-plus"/></svg> New sculpture</a>
+        <nav class="gen-list" id="gen-list"></nav>
+        <div class="sidebar-foot">
+            <span class="user-email" title="{{ current_user.email }}">{{ current_user.email }}</span>
+            <button class="icon-btn" id="theme-btn" aria-label="Switch colour theme"><svg class="icon"><use href="#i-moon"/></svg></button>
+            <form method="post" action="{{ url_for('auth.logout') }}">
+                <button class="icon-btn" type="submit" aria-label="Log out" title="Log out"><svg class="icon"><use href="#i-logout"/></svg></button>
+            </form>
+        </div>
+    </aside>
+    <div class="scrim" id="scrim" hidden></div>
+
+    <main class="main">
+        <header class="topbar only-mobile">
+            <button class="icon-btn" id="open-menu" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false"><svg class="icon"><use href="#i-menu"/></svg></button>
+            <span class="topbar-title" id="topbar-title">Sculpt AI</span>
+        </header>
+
+        <div class="scroll" id="scroll">
+            <section class="home" id="home">
+                <h1>What would you like to sculpt?</h1>
+                <p class="muted">Describe it in a sentence. You'll get an image you can refine twice, then turn into a 3D model.</p>
+
+                <div class="suggestions" id="suggestions" hidden>
+                    <h2 class="label">Your recent ideas</h2>
+                    <div class="chips" id="chips"></div>
+                </div>
+
+                <button class="drop-zone" id="drop-zone" type="button">
+                    <svg class="icon icon-lg"><use href="#i-upload"/></svg>
+                    <span><strong>Already have a picture?</strong> <span class="hide-touch">Drop a PNG or JPG here, or </span>tap to choose one</span>
+                    <span class="help">Max 10 MB · goes straight to 3D</span>
+                </button>
+
+                <div class="history" id="history" hidden>
+                    <h2 class="label">Your sculptures</h2>
+                    <div class="history-row" id="history-row"></div>
+                </div>
+            </section>
+
+            <section class="thread" id="thread" hidden aria-live="polite"></section>
+        </div>
+
+        <div class="status" id="status" role="status" hidden>
+            <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span id="status-text"></span>
+            <span id="status-time" aria-hidden="true"></span>
+        </div>
+
+        <form class="composer" id="composer">
+            <div class="composer-box">
+                <label for="prompt" class="sr-only">Describe your sculpture</label>
+                <button class="icon-btn" type="button" id="attach-btn" aria-label="Upload a PNG or JPG image" title="Upload an image"><svg class="icon"><use href="#i-paperclip"/></svg></button>
+                <textarea id="prompt" rows="1" maxlength="500" placeholder="Describe your sculpture…"></textarea>
+                <button class="send-btn" type="submit" id="send-btn" aria-label="Generate image"><svg class="icon"><use href="#i-arrow-up"/></svg></button>
+            </div>
+            <p class="composer-hint" id="composer-hint">Enter to send · Shift+Enter for a new line</p>
+        </form>
+        <input type="file" id="file-input" accept=".png,.jpg,.jpeg,image/png,image/jpeg" hidden>
+    </main>
+</div>
+<div class="toast" id="toast" role="alert" hidden></div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}
